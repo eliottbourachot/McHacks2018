@@ -9,22 +9,21 @@ def sendSparkGET(url):
 	request.add_header("Authorization", "Bearer "+bearer)
 	contents = urllib2.urlopen(request).read()
 	response = json.loads(contents)
-	print "sendSparkGET"
-	output = sendSparkPOST(response)
-	return output
+	return response
 
-def sendSparkPOST(data):
-	"""
-	This method is used for:
-	posting a message to the Spark room to confirm that a command was received and processed
-	"""
-	request = urllib2.Request(msgUrl, json.dumps(data),
-	headers={"Accept" : "application/json",
-	"Content-Type":"application/json"})
+def sendSparkPOST(url, data):
+
+	request = urllib2.Request(url, json.dumps(data),
+		headers={"Accept" : "application/json",
+		"Content-Type":"application/json"})
 	request.add_header("Authorization", "Bearer "+bearer)
 	contents = urllib2.urlopen(request).read()
 	print "sendSparkPOST"
 	return contents
+
+def easyPost(webhook, msg):
+	return sendSparkPOST("https://api.ciscospark.com/v1/messages", {"roomId": webhook['data']['roomId'], "text": msg})
+
 '''
 def sendSparkMessage(url, roomId, text):
 	request = urllib2.Request(
@@ -47,11 +46,16 @@ def index(request):
 def index(request):
 	print "INDEX_start"
 	webhook = json.loads(request.body)
+	content = sendSparkGET('{0}/{1}'.format(msgUrl,webhook['data']['id']))
+	print str(content['text'])
 	print("ID"+webhook['data']['personId'])
 	print("ID"+botId)
 	if webhook['data']['personId'] != botId:
+		msg = "Andres is the best"
 		print webhook['data']['id']
-		result = sendSparkGET('{0}/{1}'.format(msgUrl,webhook['data']['id']))
+		result = easyPost(webhook, msg)
+		#result = sendSparkPOST("https://api.ciscospark.com/v1/messages", {"roomId": webhook['data']['roomId'], "text": msg})
+		#sendSparkGET('{0}/{1}'.format(msgUrl,webhook['data']['id']))
 		print result
 		return "true"
 		print "INDEX_end"

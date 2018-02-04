@@ -4,13 +4,13 @@ from __future__ import print_function
 from ciscosparkapi import CiscoSparkAPI
 import os
 
-DEMO_ROOM_NAME = "You've got a match"
-DEMO_PEOPLE = ["eliott.bourachot@gmail.com"]
-DEMO_MESSAGE = "We found you a friend"
+DEMO_ROOM_NAME = "Your McHacks 2018 Team"
+DEMO_PEOPLE = ["eliott.bourachot@gmail.com", "erin.oneill@mail.mcgill.ca", "andresrossb@gmail.com", "egdenis@gmail.com"]
+DEMO_MESSAGE = "We've found you a team!"
 
 api = CiscoSparkAPI(access_token='MTQxNjUxMWYtYjA3My00M2UzLTlkMzItN2M2MmE4Y2JlNGMzMWFjNmRmMWQtMjJj')
     # Create a CiscoSparkAPI connection object; uses your SPARK_ACCESS_TOKEN
-# Clean up previous demo rooms
+	# Clean up previous demo rooms
 print("Searching for existing demo rooms...")
 rooms = api.rooms.list()                                                          # Creates a generator container (iterable) that lists the rooms where you are a member
 existing_demo_rooms = [room for room in rooms if room.title == DEMO_ROOM_NAME]    # Builds a list of rooms with the name DEMO_ROOM_NAME
